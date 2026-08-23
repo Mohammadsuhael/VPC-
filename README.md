@@ -125,7 +125,9 @@ service httpd start
 
 The `lab-vpc` VPC was successfully created with CIDR block `10.0.0.0/16`.
 
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/e30b0bf6-cb91-4010-b40c-db609c57a561" />
 
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/1ea769d4-a90e-43b8-b5a9-6a4c3cc4d347" />
 
 
 ---
@@ -134,6 +136,8 @@ The `lab-vpc` VPC was successfully created with CIDR block `10.0.0.0/16`.
 
 Four subnets were successfully created across two Availability Zones, consisting of two public and two private subnets.
 
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/a4fecf48-220c-460b-be9a-f7b653d8ce3f" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/4b20f1d1-c2f5-4a53-93c1-1e6d8b00eca5" />
 
 
 ---
@@ -141,6 +145,10 @@ Four subnets were successfully created across two Availability Zones, consisting
 ### 3. Route Tables
 
 The public route table was configured to route Internet traffic through the Internet Gateway, while the private route table was configured to route Internet-bound traffic through the NAT Gateway.
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/a0732d2f-af96-4a26-87b0-bc531a60b074" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/7533e60a-516e-4b0f-b0a6-b9dd21d36738" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/d83bbe0d-2270-4865-b6f2-30502c6c8326" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/ecbd8f88-f024-4953-923b-e0b425809df3" />
 
 
 
@@ -150,6 +158,7 @@ The public route table was configured to route Internet traffic through the Inte
 
 The `Web Security Group` was successfully created with HTTP access on port `80`.
 
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/071d17a4-a945-4546-bf0c-ff9191935a35" />
 
 
 ---
@@ -158,11 +167,16 @@ The `Web Security Group` was successfully created with HTTP access on port `80`.
 
 The EC2 instance `Web Server 1` was successfully launched in the public subnet with the required security group.
 
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/774d19c6-69be-454f-bb18-a404f2a02d1a" />
 
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/1dcc4497-3b89-4a47-93b4-33d730eb68c0" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5d44fbf1-3efe-4545-85e2-aceb459a140c" />
 
 ---
 
 ### 6. Web Server Output
+<img width="1331" height="613" alt="image" src="https://github.com/user-attachments/assets/a84696db-af5e-4a68-b2e8-a870707caa14" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/de4a120a-d317-4be8-a857-0d5b30eb3245" />
 
 
 After the instance passed both status checks, its Public IPv4 DNS was opened in a browser.
