@@ -1,96 +1,178 @@
-IAM Working Overview
+# EX 4 :DEPLOYMENT AND CONFIGURATION OF A PRIVATE CLOUD IN AWS
+## Name : Mohammad Suhael
+## Register Number : 212224230164
+## Aim
 
-AIM
+To create a customised **Amazon VPC** with public and private subnets, configure route tables and security groups, and launch an **Amazon EC2 web server** inside the VPC.
 
-IAM Working Overview
+## Algorithm
 
-This repository provides a comprehensive overview of Identity and Access Management (IAM), focusing on its purpose, components, and implementation practices in cloud and enterprise environments. The aim is to educate developers, system admins, and security teams on IAM essentials and offer a hands-on guide for setting up and managing IAM policies.
+1. Open the AWS Management Console and select the **VPC** service.
+2. Create a VPC using the **VPC and more** option.
+3. Configure the VPC with CIDR block `10.0.0.0/16`.
+4. Create one public subnet and one private subnet in `us-east-1a`.
+5. Configure the public subnet with CIDR `10.0.0.0/24`.
+6. Configure the private subnet with CIDR `10.0.1.0/24`.
+7. Create an Internet Gateway and a NAT Gateway.
+8. Create a second public subnet in `us-east-1b` with CIDR `10.0.2.0/24`.
+9. Create a second private subnet in `us-east-1b` with CIDR `10.0.3.0/24`.
+10. Associate the private subnets with the private route table.
+11. Associate the public subnets with the public route table.
+12. Create a security group named `Web Security Group`.
+13. Allow HTTP traffic on port `80` from anywhere using IPv4.
+14. Open the EC2 service and launch an instance named `Web Server 1`.
+15. Select **Amazon Linux 2023** and instance type `t2.micro`.
+16. Select the `vockey` key pair.
+17. Configure the instance to use `lab-vpc` and `lab-subnet-public2`.
+18. Enable automatic assignment of a public IP address.
+19. Associate the `Web Security Group` with the EC2 instance.
+20. Add the user-data script to install Apache, PHP, MariaDB and the lab web application.
+21. Launch the EC2 instance.
+22. Wait until the instance shows **2/2 checks passed**.
+23. Copy the Public IPv4 DNS of the instance.
+24. Open the Public DNS in a browser and verify that the web application is accessible.
 
-Introduction
-Identity and Access Management (IAM) is a framework of policies, technologies, and practices designed to manage digital identities and control access to resources. IAM helps ensure the right individuals have the right access to resources at the right time. It is crucial for securing sensitive data and resources in any organization, especially those operating in a cloud environment.
-Objectives
+## Program
 
-•	To understand the purpose and benefits of IAM
-•	To learn about the core components of IAM
-•	To gain hands-on experience setting up and managing IAM policies
-•	To explore best practices for enhancing security through IAM
+### VPC Configuration
 
-Prerequisites
+```text
+VPC Name              : lab-vpc
+IPv4 CIDR             : 10.0.0.0/16
+Region                : us-east-1
+Availability Zones    : us-east-1a, us-east-1b
+DNS Hostnames         : Enabled
+DNS Resolution        : Enabled
+```
 
-Before diving into IAM, you should have a foundational understanding of:
+### Subnet Configuration
 
-•	Cloud Services (AWS, Azure, Google Cloud)
-•	Basic Networking and Security Concepts
-•	Programming (Python, Bash, or any language preferred for API interactions)
-•	Version Control (Git for managing this project)
+| Subnet                           | Type    | Availability Zone | CIDR          |
+| -------------------------------- | ------- | ----------------- | ------------- |
+| `lab-subnet-public1-us-east-1a`  | Public  | us-east-1a        | `10.0.0.0/24` |
+| `lab-subnet-private1-us-east-1a` | Private | us-east-1a        | `10.0.1.0/24` |
+| `lab-subnet-public2`             | Public  | us-east-1b        | `10.0.2.0/24` |
+| `lab-subnet-private2`            | Private | us-east-1b        | `10.0.3.0/24` |
 
-Core Components of IAM
+### Network Components
 
-IAM encompasses several core components that work together to provide secure access management:
+```text
+Internet Gateway : lab-igw
+NAT Gateway      : lab-nat-public1-us-east-1a
 
-•	Identities: Represent users, roles, or services accessing resources. Identities can be internal users, external partners, or applications.
-•	Policies: Define permissions for each identity, specifying what actions they can perform on which resources.
-•	Roles: Enable resource-specific permissions that can be assumed by users or services, allowing temporary access as needed.
-•	Authentication: The process of verifying an identity, typically through credentials such as passwords or tokens.
-•	Authorization: Determines what an authenticated identity can access or modify, enforced through policies.
+Public Route Table:
+lab-rtb-public
 
-IAM Best Practices
+Private Route Table:
+lab-rtb-private1-us-east-1a
+```
 
-1.	Use the Principle of Least Privilege: Limit permissions to the minimum necessary.
-2.	Enable Multi-Factor Authentication (MFA): Protect against unauthorized access.
-3.	Implement Role-Based Access Control (RBAC): Group permissions by roles to simplify management.
-4.	Regularly Audit and Monitor Access Logs: Stay aware of access patterns and detect suspicious activities.
-5.	Rotate and Manage Access Keys Carefully: Reduce risks by rotating keys frequently.
+The public route table sends Internet-bound traffic through the Internet Gateway.
 
-Setup Guide
+The private route table sends Internet-bound traffic through the NAT Gateway, allowing resources in private subnets to access the Internet without being directly accessible from the Internet.
 
-1.	Configure IAM Roles and Policies
+### Security Group
 
-•	Step 1: Create an IAM role with specific permissions for your users or applications.
-•	Step 2: Attach policies to roles, limiting permissions according to your needs.
-•	Step 3: Test access by assuming roles and attempting various actions.
+```text
+Security Group Name : Web Security Group
+Description         : Enable HTTP access
 
-2.	Enable Multi-Factor Authentication (MFA)
+Inbound Rule:
+Protocol            : TCP
+Port                : 80
+Type                : HTTP
+Source              : Anywhere-IPv4
+Description         : Permit web requests
+```
 
-•	Step 1: Go to your IAM console and select your user account.
-•	Step 2: Choose "Security credentials" and follow instructions to enable MFA.
+### EC2 Configuration
 
-3.	Set Up Identity Federation
+```text
+Instance Name       : Web Server 1
+AMI                 : Amazon Linux 2023
+Instance Type       : t2.micro
+Key Pair            : vockey
+VPC                 : lab-vpc
+Subnet              : lab-subnet-public2
+Public IP            : Enabled
+Security Group      : Web Security Group
+Storage             : 8 GiB gp3
+```
 
-•	Step 1: Configure identity providers (IdP) like SAML or OpenID Connect for single sign-on.
-•	Step 2: Map IdP roles to IAM roles for seamless access control.
+### User Data Script
 
-4.	Monitor and Audit with CloudTrail
+The following user-data script was used to configure the web server automatically during instance launch:
 
-•	Step 1: Enable logging of all IAM activity using services like AWS CloudTrail.
-•	Step 2: Regularly review logs to ensure compliance with security policies.
+```bash
+#!/bin/bash
 
-Examples
+# Install Apache Web Server and PHP
+dnf install -y httpd wget php mariadb105-server
 
-Here are a few basic examples of IAM commands and scripts:
-•	Creating a User:
-aws iam create-user --user-name NewUser
-•	Attaching a Policy to a User:
-aws iam attach-user-policy --user-name NewUser --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess
-•	Creating an Access Key for a User:
-aws iam create-access-key --user-name NewUser
+# Download Lab files
+wget https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/CUR-TF-100-ACCLFO-2/2-lab2-vpc/s3/lab-app.zip
 
+unzip lab-app.zip -d /var/www/html/
 
+# Turn on web server
+chkconfig httpd on
+service httpd start
+```
 
+## Output
 
+### 1. VPC Created
 
-
-While IAM is essential for managing access control, it does have limitations:
-•	Complex policies can lead to unintended access if not configured carefully.
-•	Requires continuous auditing and updates as roles and permissions evolve.
-•	Proper training and understanding of IAM policies are critical for avoiding misconfigurations.
-
-
-Conclusion
-IAM is a foundational aspect of security in cloud environments, helping control and monitor access to resources effectively. By following best practices and regularly auditing IAM configurations, organizations can maintain robust access control, protecting their digital assets from unauthorized access.
+The `lab-vpc` VPC was successfully created with CIDR block `10.0.0.0/16`.
 
 
 
 
+---
+
+### 2. Subnets Created
+
+Four subnets were successfully created across two Availability Zones, consisting of two public and two private subnets.
 
 
+
+---
+
+### 3. Route Tables
+
+The public route table was configured to route Internet traffic through the Internet Gateway, while the private route table was configured to route Internet-bound traffic through the NAT Gateway.
+
+
+
+---
+
+### 4. Web Security Group
+
+The `Web Security Group` was successfully created with HTTP access on port `80`.
+
+
+
+---
+
+### 5. EC2 Web Server
+
+The EC2 instance `Web Server 1` was successfully launched in the public subnet with the required security group.
+
+
+
+---
+
+### 6. Web Server Output
+
+
+After the instance passed both status checks, its Public IPv4 DNS was opened in a browser.
+
+The web application successfully displayed the AWS logo and EC2 instance metadata, confirming that the web server was running correctly.
+
+## Result
+
+The **Amazon VPC** was successfully created with public and private subnets distributed across two Availability Zones. Internet connectivity was configured using an Internet Gateway and NAT Gateway.
+
+The `Web Security Group` was successfully configured to allow HTTP traffic, and the **EC2 Web Server 1** instance was successfully launched in the public subnet.
+
+The web application was accessible through the instance's Public IPv4 DNS, confirming that the VPC, networking, security group, EC2 instance, and web server were configured successfully.
